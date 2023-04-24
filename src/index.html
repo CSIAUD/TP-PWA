@@ -8,6 +8,17 @@
     <title>Pendu</title>
   </head>
   <body>
+    <div id="geolocation">
+      <p id="title">Position :</p>
+      <p id="latitude">Latitude => <span></span></p>
+      <p id="longitude">Longitude => <span></span></p>
+    </div>
+    <div id="battery">
+      <p id="title">Batterie :</p>
+      <p id="percent">Charge => <span></span></p>
+      <p id="status">Status => <span></span></p>
+      <p id="time">Temps restant => <span></span></p>
+    </div>
     <main class="flex flex-col items-center gap-2 text-2xl text-center md:gap-5 md:text-4xl">
       <h1 class="text-4xl md:text-6xl">Pendu</h1>
       <h2 class="text-4xl md:text-6xl" id="pendu-status"></h2>
@@ -30,18 +41,38 @@
         </div>
       </div>
     </main>
+    <div id="UserAgent">
+      <p>User Agent :<br/><span></span></p>
+    </div>
   </body>
 </html>
 
-<script>
-// BATTERY ====================================================================================================================
+<style>
+  #geolocation{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+  #battery{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  #UserAgent{
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: calc(100% - 30px);
+  }
+</style>
 
+<!-- // BATTERY ==================================================================================================================== -->
+<script>
   navigator.getBattery().then((battery) => {
       function updateAllBatteryInfo() {
         updateChargeInfo();
         updateLevelInfo();
         updateChargingInfo();
-        updateDischargingInfo();
       }
       updateAllBatteryInfo();
     
@@ -49,30 +80,42 @@
         updateChargeInfo();
       });
       function updateChargeInfo() {
-        console.log(`Battery charging? ${battery.charging ? "Yes" : "No"}`);
+        document.querySelector("#battery > #status > span").innerHTML = `${battery.charging ? "En Charge" : "Débranché"}`
       }
     
       battery.addEventListener("levelchange", () => {
         updateLevelInfo();
       });
       function updateLevelInfo() {
-        console.log(`Battery level: ${battery.level * 100}%`);
+        document.querySelector("#battery > #percent > span").innerHTML = `${battery.level * 100}%`
       }
     
       battery.addEventListener("chargingtimechange", () => {
         updateChargingInfo();
       });
       function updateChargingInfo() {
-        console.log(`Battery charging time: ${battery.chargingTime} seconds`);
+        if(battery.dischargingTime != 'infinity')
+          document.querySelector("#battery > #time > span").innerHTML = `${battery.dischargingTime} secondes`
+        else
+          document.querySelector("#battery > #time > span").innerHTML = `${battery.chargingTime} secondes`
       }
     
       battery.addEventListener("dischargingtimechange", () => {
-        updateDischargingInfo();
+        updateChargingInfo();
       });
-      function updateDischargingInfo() {
-        console.log(`Battery discharging time: ${battery.dischargingTime} seconds`);
-      }
     });
+</script>
 
-    console.log(Geolocation.getCurrentPosition());
+<!-- // GEOLOCATION ================================================================================================================ -->
+<script>
+  let geolocation = navigator.geolocation;
+  geolocation.getCurrentPosition((data) => {
+    document.querySelector('#latitude > span').innerHTML = data.coords.latitude
+    document.querySelector('#longitude > span').innerHTML = data.coords.longitude
+  })
+</script>
+
+<!-- // USER-AGENT ================================================================================================================= -->
+<script>
+  document.querySelector('#UserAgent > p > span').innerHTML = navigator.userAgent
 </script>
