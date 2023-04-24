@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/assets/manifest.json" />
+    <title>Pendu</title>
+  </head>
+  <body>
+    <main class="flex flex-col items-center gap-2 text-2xl text-center md:gap-5 md:text-4xl">
+      <h1 class="text-4xl md:text-6xl">Pendu</h1>
+      <h2 class="text-4xl md:text-6xl" id="pendu-status"></h2>
+      <div class="pendu-input-user">
+        <form class="flex flex-col items-center">
+          <label for="pendu-input-user">Lettre :</label>
+          <input id="pendu-input-user" class="border-b-blue border-b-2 outline-none text-center" maxlength="1" autofocus/>
+        </form>
+      </div>
+      <div class="pendu-solution-header">
+        <div class="pendu-solution-header-title">Nombre de chances restantes</div>
+        <div id="pendu-solution-header-title-nb-chance">
+          <div></div>
+        </div>
+      </div>
+      <div class="pendu-solution-container w-full p-2 flex flex-col items-center gap-10">
+        <div id="pendu-solution-container-content" class="flex flex-row flex-nowrap gap-5"></div>
+        <div class="pendu-solution-container-pendu-view">
+          <img id="pendu-solution-container-pendu-view-img"/>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
+<script>
+// BATTERY ====================================================================================================================
+
+  navigator.getBattery().then((battery) => {
+      function updateAllBatteryInfo() {
+        updateChargeInfo();
+        updateLevelInfo();
+        updateChargingInfo();
+        updateDischargingInfo();
+      }
+      updateAllBatteryInfo();
+    
+      battery.addEventListener("chargingchange", () => {
+        updateChargeInfo();
+      });
+      function updateChargeInfo() {
+        console.log(`Battery charging? ${battery.charging ? "Yes" : "No"}`);
+      }
+    
+      battery.addEventListener("levelchange", () => {
+        updateLevelInfo();
+      });
+      function updateLevelInfo() {
+        console.log(`Battery level: ${battery.level * 100}%`);
+      }
+    
+      battery.addEventListener("chargingtimechange", () => {
+        updateChargingInfo();
+      });
+      function updateChargingInfo() {
+        console.log(`Battery charging time: ${battery.chargingTime} seconds`);
+      }
+    
+      battery.addEventListener("dischargingtimechange", () => {
+        updateDischargingInfo();
+      });
+      function updateDischargingInfo() {
+        console.log(`Battery discharging time: ${battery.dischargingTime} seconds`);
+      }
+    });
+
+    console.log(Geolocation.getCurrentPosition());
+</script>
